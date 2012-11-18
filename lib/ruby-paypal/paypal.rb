@@ -336,18 +336,19 @@ class Paypal
         raise "depricated, use default params with set_express_checkout"
       end
 
-      def set_express_checkout(return_url, cancel_url, amount, currency, other_params={})
+      def set_express_checkout(return_url, cancel_url, products, currency="USD", other_params={})
         params = {
           'METHOD' => 'SetExpressCheckout',
           'RETURNURL' => return_url,
           'CANCELURL' => cancel_url,
-          "PAYMENTREQUEST_0_CURRENCYCODE" => currency,
-          "PAYMENTREQUEST_0_AMT" => amount.to_s
+          "PAYMENTREQUEST_0_CURRENCYCODE" => currency
         }
 
-        params.merge! other_params
+        params.merge! parse_product_params(products)
         make_nvp_call(params)
       end
+      
+      
 
       def parse_product_params(products)
         product_params = {}
